@@ -12,13 +12,12 @@ function HomePage() {
       </div>
 
       <div className="hero">
-        <div className="hero-sparks" />
         <div className="hero-content">
           <p className="eyebrow">Nexus Prime</p>
           <h1 className="page-title">Energiza tu próxima compra gamer</h1>
           <p className="page-lead">
-            Creamos una vitrina completa con navegación clara, catálogo filtrable, flujos de
-            checkout realistas y un tema oscuro con acentos neón que se siente premium.
+            Explora un storefront listo para catálogos dinámicos, filtros avanzados y una
+            experiencia de checkout que brilla con un tema oscuro y acentos neón.
           </p>
           <div className="hero-actions">
             <NavLink to="/gamer-store" className="primary-button">
@@ -27,20 +26,6 @@ function HomePage() {
             <NavLink to="/fidelidad" className="ghost-button">
               Beneficios y fidelidad
             </NavLink>
-          </div>
-          <div className="hero-metrics">
-            <div className="metric-card">
-              <strong>+60</strong>
-              <span>SKUs listos para crecer</span>
-            </div>
-            <div className="metric-card">
-              <strong>Filtros</strong>
-              <span>Búsqueda, rango y tags</span>
-            </div>
-            <div className="metric-card">
-              <strong>Checkout</strong>
-              <span>Validaciones + fidelidad</span>
-            </div>
           </div>
         </div>
       </div>
@@ -63,13 +48,6 @@ function HomePage() {
           <p>
             Usa el encabezado y pie de página comunes para mantener una experiencia coherente
             en toda la aplicación.
-          </p>
-        </article>
-        <article className="info-card">
-          <h2>Catálogo listo para lanzar</h2>
-          <p>
-            El catálogo gamer incluye filtros dinámicos, cards con badges, CTA claros y un flujo de
-            compra que simula puntos de fidelidad y soporte inmediato.
           </p>
         </article>
       </div>
