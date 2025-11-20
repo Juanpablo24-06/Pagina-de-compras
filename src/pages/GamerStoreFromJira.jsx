@@ -38,6 +38,8 @@ function GamerStoreFromJira() {
   const [purchaseHistory, setPurchaseHistory] = useState([]);
   const [supportForm, setSupportForm] = useState({ name: '', message: '' });
   const [supportStatus, setSupportStatus] = useState('');
+  const cartItemCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+  const notificationCount = purchaseHistory.length + (supportStatus ? 1 : 0);
 
   const jiraByCategory = useMemo(
     () =>
@@ -208,6 +210,11 @@ function GamerStoreFromJira() {
         <p className="eyebrow">Gamer Store</p>
         <h1 className="page-title">Catálogo y experiencia end-to-end</h1>
         <p className="page-lead">{pageLead}</p>
+        <div className="pill-row">
+          <span className="badge counter">Carrito: {cartItemCount}</span>
+          <span className="badge counter">Notificaciones: {notificationCount}</span>
+          <span className="badge counter">Puntos: {pointsBalance}</span>
+        </div>
       </header>
 
       <article className="info-card">
@@ -240,7 +247,15 @@ function GamerStoreFromJira() {
 
       <div className="card-grid">
         <article className="info-card">
-          <h2>{jiraByCategory.catalogo?.titulo || 'Filtros y búsqueda'}</h2>
+          <div className="section-header">
+            <h2 className="section-title">
+              {jiraByCategory.catalogo?.titulo || 'Filtros y búsqueda'}
+            </h2>
+            <div className="badge-row">
+              <span className="badge category">Catálogo</span>
+              <span className="badge platform">Plataformas</span>
+            </div>
+          </div>
           <p className="helper-text">
             {jiraByCategory.catalogo?.descripcion ||
               'Explora el catálogo gamer, filtra por categoría y plataforma o busca por nombre.'}
@@ -297,7 +312,13 @@ function GamerStoreFromJira() {
         </article>
 
         <article className="info-card">
-          <h2>{jiraByCategory.catalogo?.titulo || 'Catálogo gamer'}</h2>
+          <div className="section-header">
+            <h2 className="section-title">{jiraByCategory.catalogo?.titulo || 'Catálogo gamer'}</h2>
+            <div className="badge-row">
+              <span className="badge category">Stock {filteredProducts.length}</span>
+              <span className="badge platform">Total {gamerProducts.length}</span>
+            </div>
+          </div>
           <p className="helper-text">
             {jiraByCategory.catalogo?.descripcion || 'Revisa los productos destacados y agrégalos al carrito.'}
           </p>
@@ -305,9 +326,12 @@ function GamerStoreFromJira() {
             {filteredProducts.map((product) => (
               <div key={product.id} className="catalog-card">
                 <div>
+                  <div className="badge-row">
+                    <span className="badge category">{product.category}</span>
+                    <span className="badge platform">{product.platform}</span>
+                  </div>
                   <h3>{product.name}</h3>
-                  <p className="meta">{product.category}</p>
-                  <p className="meta">Plataforma: {product.platform}</p>
+                  <p className="meta">ID #{product.id}</p>
                   <p className="price">${product.price.toFixed(2)}</p>
                 </div>
                 <button
@@ -327,7 +351,13 @@ function GamerStoreFromJira() {
         </article>
 
         <article className="info-card">
-          <h2>{jiraByCategory.carrito?.titulo || 'Carrito'}</h2>
+          <div className="section-header">
+            <h2 className="section-title">{jiraByCategory.carrito?.titulo || 'Carrito'}</h2>
+            <div className="badge-row">
+              <span className="badge category">Ítems {cartItemCount}</span>
+              <span className="badge platform">Total ${cartTotal.toFixed(2)}</span>
+            </div>
+          </div>
           <p className="helper-text">
             {jiraByCategory.carrito?.descripcion ||
               'Administra tus productos, ajusta cantidades y revisa el total a pagar.'}
@@ -369,7 +399,13 @@ function GamerStoreFromJira() {
         </article>
 
         <article className="info-card">
-          <h2>{jiraByCategory.pagos?.titulo || 'Checkout simulado'}</h2>
+          <div className="section-header">
+            <h2 className="section-title">{jiraByCategory.pagos?.titulo || 'Checkout simulado'}</h2>
+            <div className="badge-row">
+              <span className="badge category">Pago</span>
+              <span className="badge platform">Puntos +{pointsBalance}</span>
+            </div>
+          </div>
           <p className="helper-text">
             {jiraByCategory.pagos?.descripcion ||
               'Completa los campos para confirmar tu pedido y verificar el cálculo de puntos.'}
@@ -442,7 +478,13 @@ function GamerStoreFromJira() {
         </article>
 
         <article className="info-card">
-          <h2>Historial de compras y puntos</h2>
+          <div className="section-header">
+            <h2 className="section-title">Historial de compras y puntos</h2>
+            <div className="badge-row">
+              <span className="badge category">Órdenes {purchaseHistory.length}</span>
+              <span className="badge platform">Balance {pointsBalance} pts</span>
+            </div>
+          </div>
           <p className="helper-text">
             Guarda un registro local de los pedidos confirmados con su total y puntos obtenidos.
           </p>
@@ -468,7 +510,13 @@ function GamerStoreFromJira() {
         </article>
 
         <article className="info-card">
-          <h2>{jiraByCategory.soporte?.titulo || 'Soporte y contacto'}</h2>
+          <div className="section-header">
+            <h2 className="section-title">{jiraByCategory.soporte?.titulo || 'Soporte y contacto'}</h2>
+            <div className="badge-row">
+              <span className="badge category">Tickets</span>
+              <span className="badge platform">Notif {notificationCount}</span>
+            </div>
+          </div>
           <p className="helper-text">
             {jiraByCategory.soporte?.descripcion || 'Envíanos tu solicitud rápida y obtén una confirmación inmediata.'}
           </p>
