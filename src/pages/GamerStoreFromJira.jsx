@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import jiraPageConfig from '../data/jiraPageConfig';
 import './PageStyles.css';
 
 const gamerProducts = [
@@ -34,6 +35,26 @@ function GamerStoreFromJira() {
   const [pointsEarned, setPointsEarned] = useState(null);
   const [supportForm, setSupportForm] = useState({ name: '', message: '' });
   const [supportStatus, setSupportStatus] = useState('');
+
+  const jiraByCategory = useMemo(
+    () =>
+      jiraPageConfig.reduce((grouped, item) => {
+        grouped[item.categoria] = item;
+        return grouped;
+      }, {}),
+    [],
+  );
+
+  const pageLead = useMemo(() => {
+    const parts = ['catalogo', 'carrito', 'pagos']
+      .map((category) => jiraByCategory[category]?.descripcion)
+      .filter(Boolean);
+
+    return (
+      parts.join(' ') ||
+      'Explora el catálogo gamer, filtra por categoría y plataforma, agrega productos al carrito, simula un checkout y calcula los puntos que ganarías.'
+    );
+  }, [jiraByCategory]);
 
   const handleApplyFilters = () => {
     setAppliedFilters(filters);
@@ -122,21 +143,61 @@ function GamerStoreFromJira() {
     setSupportForm({ name: '', message: '' });
   };
 
+  const renderActions = (categoryKey) => {
+    const item = jiraByCategory[categoryKey];
+    if (!item?.acciones?.length) return null;
+    return (
+      <ul className="bullet-list">
+        {item.acciones.map((action) => (
+          <li key={`${categoryKey}-${action}`}>{action}</li>
+        ))}
+      </ul>
+    );
+  };
+
   return (
     <section className="page">
       <header className="page-header">
         <p className="eyebrow">Gamer Store</p>
         <h1 className="page-title">Catálogo y experiencia end-to-end</h1>
-        <p className="page-lead">
-          Explora el catálogo gamer, filtra por categoría y plataforma, agrega productos al
-          carrito, simula un checkout y calcula los puntos que ganarías. También puedes enviar
-          una solicitud rápida a soporte.
-        </p>
+        <p className="page-lead">{pageLead}</p>
       </header>
+
+      <article className="info-card">
+        <h2>Historias clave traídas desde Jira</h2>
+        <p className="helper-text">
+          La página se alimenta de la configuración generada desde el CSV para mantener los textos
+          y acciones alineados con el backlog.
+        </p>
+        <div className="catalog-grid">
+          {jiraPageConfig.map((item) => (
+            <div key={item.id} className="catalog-card">
+              <div>
+                <h3>{item.titulo}</h3>
+                <p className="meta">
+                  ID: {item.id} · Categoría: {item.categoria}
+                </p>
+                <p className="helper-text">{item.descripcion}</p>
+              </div>
+              {item.acciones?.length ? (
+                <ul className="bullet-list">
+                  {item.acciones.map((action) => (
+                    <li key={`${item.id}-${action}`}>{action}</li>
+                  ))}
+                </ul>
+              ) : null}
+            </div>
+          ))}
+        </div>
+      </article>
 
       <div className="card-grid">
         <article className="info-card">
-          <h2>Filtros y búsqueda</h2>
+          <h2>{jiraByCategory.catalogo?.titulo || 'Filtros y búsqueda'}</h2>
+          <p className="helper-text">
+            {jiraByCategory.catalogo?.descripcion ||
+              'Explora el catálogo gamer, filtra por categoría y plataforma o busca por nombre.'}
+          </p>
           <div className="filter-grid">
             <label className="filter-field">
               <span>Búsqueda</span>
@@ -185,10 +246,14 @@ function GamerStoreFromJira() {
           <p className="helper-text">
             Mostrando {filteredProducts.length} de {gamerProducts.length} productos disponibles.
           </p>
+          {renderActions('catalogo')}
         </article>
 
         <article className="info-card">
-          <h2>Catálogo gamer</h2>
+          <h2>{jiraByCategory.catalogo?.titulo || 'Catálogo gamer'}</h2>
+          <p className="helper-text">
+            {jiraByCategory.catalogo?.descripcion || 'Revisa los productos destacados y agrégalos al carrito.'}
+          </p>
           <div className="catalog-grid">
             {filteredProducts.map((product) => (
               <div key={product.id} className="catalog-card">
@@ -211,10 +276,15 @@ function GamerStoreFromJira() {
               <p className="helper-text">No hay productos que coincidan con los filtros.</p>
             )}
           </div>
+          {renderActions('catalogo')}
         </article>
 
         <article className="info-card">
-          <h2>Carrito</h2>
+          <h2>{jiraByCategory.carrito?.titulo || 'Carrito'}</h2>
+          <p className="helper-text">
+            {jiraByCategory.carrito?.descripcion ||
+              'Administra tus productos, ajusta cantidades y revisa el total a pagar.'}
+          </p>
           {cartItems.length === 0 && <p className="helper-text">Aún no hay productos.</p>}
           <ul className="cart-list">
             {cartItems.map((item) => (
@@ -247,12 +317,15 @@ function GamerStoreFromJira() {
           {pointsEarned !== null && (
             <p className="helper-text">Puntos estimados: {pointsEarned} pts</p>
           )}
+          {renderActions('carrito')}
+          {renderActions('puntos')}
         </article>
 
         <article className="info-card">
-          <h2>Checkout simulado</h2>
+          <h2>{jiraByCategory.pagos?.titulo || 'Checkout simulado'}</h2>
           <p className="helper-text">
-            Completa los campos para confirmar tu pedido y verificar el cálculo de puntos.
+            {jiraByCategory.pagos?.descripcion ||
+              'Completa los campos para confirmar tu pedido y verificar el cálculo de puntos.'}
           </p>
           <div className="form-grid">
             <label className="filter-field">
@@ -305,11 +378,14 @@ function GamerStoreFromJira() {
           {checkoutStarted && !checkoutStatus && (
             <p className="helper-text">Checkout iniciado. Confirma cuando estés listo.</p>
           )}
+          {renderActions('pagos')}
         </article>
 
         <article className="info-card">
-          <h2>Soporte y contacto</h2>
-          <p className="helper-text">Envíanos tu solicitud rápida y obtén una confirmación inmediata.</p>
+          <h2>{jiraByCategory.soporte?.titulo || 'Soporte y contacto'}</h2>
+          <p className="helper-text">
+            {jiraByCategory.soporte?.descripcion || 'Envíanos tu solicitud rápida y obtén una confirmación inmediata.'}
+          </p>
           <form className="form-grid" onSubmit={handleSupportSubmit}>
             <label className="filter-field">
               <span>Nombre</span>
@@ -336,6 +412,7 @@ function GamerStoreFromJira() {
             </button>
           </form>
           {supportStatus && <p className="status-text">{supportStatus}</p>}
+          {renderActions('soporte')}
         </article>
       </div>
     </section>
