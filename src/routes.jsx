@@ -24,10 +24,6 @@ export const router = createBrowserRouter(
           element: <GamerStoreFromJira />,
         },
         {
-          path: 'gamer-store-jira',
-          element: <GamerStoreFromJira />,
-        },
-        {
           path: '*',
           element: <NotFoundPage />,
         },

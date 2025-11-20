@@ -16,9 +16,6 @@ function MainLayout() {
           <NavLink to="/gamer-store" className="nav-link">
             Gamer Store
           </NavLink>
-          <NavLink to="/gamer-store-jira" className="nav-link">
-            Gamer Store Jira
-          </NavLink>
         </nav>
       </header>
       <main className="app-main">
