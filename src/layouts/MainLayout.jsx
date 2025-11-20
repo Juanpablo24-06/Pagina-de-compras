@@ -13,6 +13,9 @@ function MainLayout() {
           <NavLink to="/fidelidad" className="nav-link">
             Fidelidad
           </NavLink>
+          <NavLink to="/gamer-store" className="nav-link">
+            Gamer Store
+          </NavLink>
         </nav>
       </header>
       <main className="app-main">
