@@ -5,7 +5,7 @@ function MainLayout() {
   return (
     <div className="app-shell">
       <header className="app-header">
-        <div className="brand">Página de Compras</div>
+        <div className="brand">Nexus Prime</div>
         <nav className="main-nav">
           <NavLink to="/" end className="nav-link">
             Inicio
