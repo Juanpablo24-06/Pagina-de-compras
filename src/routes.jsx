@@ -5,31 +5,34 @@ import FidelidadPage from './pages/FidelidadPage';
 import GamerStoreFromJira from './pages/GamerStoreFromJira';
 import NotFoundPage from './pages/NotFoundPage';
 
-export const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <MainLayout />,
-    children: [
-      {
-        index: true,
-        element: <HomePage />,
-      },
-      {
-        path: 'fidelidad',
-        element: <FidelidadPage />,
-      },
-      {
-        path: 'gamer-store',
-        element: <GamerStoreFromJira />,
-      },
-      {
-        path: 'gamer-store-jira',
-        element: <GamerStoreFromJira />,
-      },
-      {
-        path: '*',
-        element: <NotFoundPage />,
-      },
-    ],
-  },
-]);
+export const router = createBrowserRouter(
+  [
+    {
+      path: '/',
+      element: <MainLayout />,
+      children: [
+        {
+          index: true,
+          element: <HomePage />,
+        },
+        {
+          path: 'fidelidad',
+          element: <FidelidadPage />,
+        },
+        {
+          path: 'gamer-store',
+          element: <GamerStoreFromJira />,
+        },
+        {
+          path: 'gamer-store-jira',
+          element: <GamerStoreFromJira />,
+        },
+        {
+          path: '*',
+          element: <NotFoundPage />,
+        },
+      ],
+    },
+  ],
+  { basename: '/Pagina-de-compras/' }
+);
