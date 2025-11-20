@@ -2,6 +2,7 @@ import { createBrowserRouter } from 'react-router-dom';
 import MainLayout from './layouts/MainLayout';
 import HomePage from './pages/HomePage';
 import FidelidadPage from './pages/FidelidadPage';
+import GamerStoreFromJira from './pages/GamerStoreFromJira';
 import NotFoundPage from './pages/NotFoundPage';
 
 export const router = createBrowserRouter([
@@ -16,6 +17,10 @@ export const router = createBrowserRouter([
       {
         path: 'fidelidad',
         element: <FidelidadPage />,
+      },
+      {
+        path: 'gamer-store',
+        element: <GamerStoreFromJira />,
       },
       {
         path: '*',
