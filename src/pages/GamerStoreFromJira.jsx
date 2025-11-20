@@ -32,7 +32,10 @@ function GamerStoreFromJira() {
     paymentMethod: 'Tarjeta',
   });
   const [checkoutStatus, setCheckoutStatus] = useState('');
+  const [checkoutErrors, setCheckoutErrors] = useState({});
   const [pointsEarned, setPointsEarned] = useState(null);
+  const [pointsBalance, setPointsBalance] = useState(0);
+  const [purchaseHistory, setPurchaseHistory] = useState([]);
   const [supportForm, setSupportForm] = useState({ name: '', message: '' });
   const [supportStatus, setSupportStatus] = useState('');
 
@@ -110,6 +113,29 @@ function GamerStoreFromJira() {
   const handleCheckoutChange = (event) => {
     const { name, value } = event.target;
     setCheckoutForm((prev) => ({ ...prev, [name]: value }));
+    setCheckoutErrors((prev) => {
+      if (!prev[name]) return prev;
+      const updated = { ...prev };
+      delete updated[name];
+      return updated;
+    });
+  };
+
+  const validateCheckout = () => {
+    const errors = {};
+    if (!checkoutForm.fullName.trim()) {
+      errors.fullName = 'El nombre es obligatorio.';
+    }
+    if (!checkoutForm.email.trim()) {
+      errors.email = 'El correo es obligatorio.';
+    }
+    if (!checkoutForm.address.trim()) {
+      errors.address = 'La dirección es obligatoria.';
+    }
+    if (!checkoutForm.paymentMethod) {
+      errors.paymentMethod = 'Selecciona un método de pago.';
+    }
+    return errors;
   };
 
   const handleConfirmCheckout = () => {
@@ -117,12 +143,33 @@ function GamerStoreFromJira() {
       setCheckoutStatus('Inicia el checkout antes de confirmar.');
       return;
     }
-    if (!checkoutForm.fullName || !checkoutForm.email || !checkoutForm.address) {
-      setCheckoutStatus('Completa todos los campos para confirmar el checkout.');
+    const errors = validateCheckout();
+    setCheckoutErrors(errors);
+    if (Object.keys(errors).length > 0) {
+      setCheckoutStatus('Corrige los errores para confirmar tu checkout.');
       return;
     }
-    setCheckoutStatus(`Checkout confirmado para ${checkoutForm.fullName}. ¡Gracias por tu compra!`);
-    setPointsEarned(Math.round(cartTotal * 10));
+    const earnedPoints = Math.floor(cartTotal / 1000);
+    setPointsEarned(earnedPoints);
+    setPointsBalance((prev) => prev + earnedPoints);
+    setCheckoutStatus(
+      `Checkout confirmado para ${checkoutForm.fullName}. Has sumado ${earnedPoints} puntos (saldo: ${
+        pointsBalance + earnedPoints
+      }). ¡Gracias por tu compra!`,
+    );
+    setPurchaseHistory((prev) => [
+      {
+        id: Date.now(),
+        customer: checkoutForm.fullName,
+        paymentMethod: checkoutForm.paymentMethod,
+        total: cartTotal,
+        points: earnedPoints,
+        items: cartItems.reduce((sum, item) => sum + item.quantity, 0),
+      },
+      ...prev,
+    ]);
+    setCheckoutStarted(false);
+    setCheckoutErrors({});
   };
 
   const handleCalculatePoints = () => {
@@ -130,7 +177,7 @@ function GamerStoreFromJira() {
       setPointsEarned(0);
       return;
     }
-    setPointsEarned(Math.round(cartTotal * 8));
+    setPointsEarned(Math.floor(cartTotal / 1000));
   };
 
   const handleSupportSubmit = (event) => {
@@ -336,7 +383,11 @@ function GamerStoreFromJira() {
                 value={checkoutForm.fullName}
                 onChange={handleCheckoutChange}
                 placeholder="Alex Gamer"
+                aria-invalid={Boolean(checkoutErrors.fullName)}
               />
+              {checkoutErrors.fullName && (
+                <p className="error-text">{checkoutErrors.fullName}</p>
+              )}
             </label>
             <label className="filter-field">
               <span>Correo</span>
@@ -346,7 +397,9 @@ function GamerStoreFromJira() {
                 value={checkoutForm.email}
                 onChange={handleCheckoutChange}
                 placeholder="alex@example.com"
+                aria-invalid={Boolean(checkoutErrors.email)}
               />
+              {checkoutErrors.email && <p className="error-text">{checkoutErrors.email}</p>}
             </label>
             <label className="filter-field">
               <span>Dirección</span>
@@ -356,7 +409,9 @@ function GamerStoreFromJira() {
                 value={checkoutForm.address}
                 onChange={handleCheckoutChange}
                 placeholder="Calle gamer 123"
+                aria-invalid={Boolean(checkoutErrors.address)}
               />
+              {checkoutErrors.address && <p className="error-text">{checkoutErrors.address}</p>}
             </label>
             <label className="filter-field">
               <span>Método de pago</span>
@@ -364,21 +419,52 @@ function GamerStoreFromJira() {
                 name="paymentMethod"
                 value={checkoutForm.paymentMethod}
                 onChange={handleCheckoutChange}
+                aria-invalid={Boolean(checkoutErrors.paymentMethod)}
               >
                 <option value="Tarjeta">Tarjeta</option>
                 <option value="PayPal">PayPal</option>
                 <option value="Transferencia">Transferencia</option>
               </select>
+              {checkoutErrors.paymentMethod && (
+                <p className="error-text">{checkoutErrors.paymentMethod}</p>
+              )}
             </label>
           </div>
           <button type="button" className="primary-button" onClick={handleConfirmCheckout}>
             Confirmar pedido
           </button>
           {checkoutStatus && <p className="status-text">{checkoutStatus}</p>}
+          <p className="helper-text">Saldo actual de puntos: {pointsBalance} pts</p>
           {checkoutStarted && !checkoutStatus && (
             <p className="helper-text">Checkout iniciado. Confirma cuando estés listo.</p>
           )}
           {renderActions('pagos')}
+        </article>
+
+        <article className="info-card">
+          <h2>Historial de compras y puntos</h2>
+          <p className="helper-text">
+            Guarda un registro local de los pedidos confirmados con su total y puntos obtenidos.
+          </p>
+          {purchaseHistory.length === 0 && (
+            <p className="helper-text">Aún no hay compras registradas.</p>
+          )}
+          <ul className="history-list">
+            {purchaseHistory.map((purchase) => (
+              <li key={purchase.id} className="history-item">
+                <div>
+                  <strong>{purchase.customer}</strong>
+                  <p className="meta">
+                    {purchase.items} ítems · {purchase.paymentMethod}
+                  </p>
+                </div>
+                <div className="history-meta">
+                  <p className="price">${purchase.total.toFixed(2)}</p>
+                  <p className="helper-text">{purchase.points} pts</p>
+                </div>
+              </li>
+            ))}
+          </ul>
         </article>
 
         <article className="info-card">
