@@ -136,6 +136,12 @@
   color: #475569;
 }
 
+.error-text {
+  margin: 0;
+  color: #dc2626;
+  font-weight: 600;
+}
+
 .status-text {
   margin-top: 0.75rem;
   color: #16a34a;
@@ -193,4 +199,27 @@
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 0.85rem;
   margin-bottom: 0.75rem;
+}
+
+.history-list {
+  list-style: none;
+  padding: 0;
+  margin: 0.75rem 0 0;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.history-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: #f8fafc;
+}
+
+.history-meta {
+  text-align: right;
 }
