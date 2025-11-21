@@ -164,6 +164,46 @@ body {
   gap: 1.5rem;
 }
 
+.store-hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.status-bar {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.status-pill {
+  background: rgba(0, 243, 255, 0.1);
+  color: var(--primary-cyan);
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 243, 255, 0.3);
+  font-weight: 700;
+}
+
+.results-banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 1rem 1.25rem;
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+}
+
+.results-meta {
+  display: flex;
+  gap: 1rem;
+  color: var(--text-muted);
+}
+
 .product-card {
   background: var(--bg-surface);
   border: 1px solid rgba(255, 255, 255, 0.05);
@@ -179,6 +219,39 @@ body {
   transform: translateY(-5px);
   box-shadow: 0 10px 20px rgba(0,0,0,0.5), 0 0 15px rgba(188, 19, 254, 0.3);
   border-color: var(--primary-violet);
+}
+
+.product-media {
+  height: 150px;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.media-emoji {
+  font-size: 4rem;
+}
+
+.favorite {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: var(--text-muted);
+  border-radius: 999px;
+  padding: 0.25rem 0.6rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.favorite.active,
+.favorite:hover {
+  color: #fbbf24;
+  border-color: #fbbf24;
+  box-shadow: 0 0 10px rgba(251, 191, 36, 0.4);
 }
 
 .card-badge {
@@ -202,6 +275,34 @@ body {
   flex-direction: column;
 }
 
+.rating-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.rating-pill, .stock-pill {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-main);
+  padding: 0.35rem 0.7rem;
+  border-radius: 10px;
+  font-weight: 700;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.stock-pill {
+  color: var(--primary-cyan);
+  border-color: rgba(0, 243, 255, 0.3);
+}
+
+.tags-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 0.75rem;
+}
+
 .product-category {
   font-size: 0.75rem;
   color: var(--primary-cyan);
@@ -222,6 +323,65 @@ body {
   color: var(--text-muted);
   margin-bottom: 1rem;
   flex-grow: 1;
+}
+
+.hint {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin-top: 0.35rem;
+  margin-bottom: 0;
+}
+
+.dual-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.75rem;
+}
+
+.pill-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.pill {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-main);
+  padding: 0.45rem 0.7rem;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pill.active {
+  border-color: var(--primary-cyan);
+  color: var(--primary-cyan);
+  box-shadow: var(--glow-cyan);
+}
+
+.tag-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.chip {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  padding: 0.25rem 0.75rem;
+  color: var(--text-main);
+  font-weight: 700;
+  cursor: default;
+  transition: all 0.2s ease;
+}
+
+.chip.active,
+.chip:hover {
+  border-color: var(--primary-violet);
+  color: var(--primary-violet);
+  box-shadow: var(--glow-magenta);
 }
 
 .card-footer {
@@ -307,6 +467,47 @@ body {
   filter: brightness(1.2);
   box-shadow: 0 0 20px rgba(188, 19, 254, 0.4);
   transform: scale(1.02);
+}
+
+.reviews-block {
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px dashed rgba(255, 255, 255, 0.1);
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 1rem;
+}
+
+.recommendations {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.mini-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.mini-card {
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 1rem;
+}
+
+.mini-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
 }
 
 /* Utilidades */
