@@ -4,6 +4,8 @@ import HomePage from './pages/HomePage';
 import FidelidadPage from './pages/FidelidadPage';
 import GamerStoreFromJira from './pages/GamerStoreFromJira';
 import NotFoundPage from './pages/NotFoundPage';
+import AdminDashboard from './pages/AdminDashboard';
+import AuthPage from './pages/AuthPage';
 
 export const router = createBrowserRouter(
   [
@@ -22,6 +24,12 @@ export const router = createBrowserRouter(
         {
           path: 'gamer-store',
           element: <GamerStoreFromJira />,
+        },
+        {
+          path: 'admin',
+          element: <AdminDashboard />,
+          path: 'auth',
+          element: <AuthPage />,
         },
         {
           path: '*',
