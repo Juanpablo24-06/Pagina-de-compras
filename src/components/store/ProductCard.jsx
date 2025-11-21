@@ -1,53 +1,38 @@
 import { useStore } from '../../context/StoreContext';
 
 function ProductCard({ product }) {
-  const { addToCart, toggleFavorite, favorites } = useStore();
-  const isFav = favorites.includes(product.id);
+  const { addToCart, favorites } = useStore();
+  // const isFav = favorites.includes(product.id); // Could use for a heart icon later
 
   return (
-    <div className="cyber-card" style={{ '--card-color': product.color || 'var(--primary-cyan)' }}>
-      {product.deal && <div className="cyber-badge">DEAL -15%</div>}
+    <div className="product-card">
+      {product.deal && <div className="deal-badge">SPECIAL DEAL</div>}
 
-      <div className="card-image-container">
-        <span className="card-emoji" role="img" aria-label={product.name}>{product.image}</span>
-        <div className="card-overlay">
-          <button
-            className={`fav-btn ${isFav ? 'active' : ''}`}
-            onClick={() => toggleFavorite(product.id)}
-          >
-            {isFav ? '★' : '☆'}
-          </button>
-        </div>
+      <div className="card-img-box">
+        <div className="card-emoji">{product.image}</div>
       </div>
 
-      <div className="card-body">
-        <div className="card-meta">
-          <span className="category-pill">{product.category}</span>
-          <span className="rating">★ {product.rating}</span>
+      <div className="card-info">
+        <div className="card-header">
+            <span className="card-category">{product.category}</span>
+            <span className="card-rating">★ {product.rating}</span>
         </div>
 
         <h3 className="card-title">{product.name}</h3>
-        <p className="card-tagline">{product.tagline}</p>
+        <p className="card-desc">{product.tagline}</p>
 
-        {/* Tech Specs Mini-Display */}
-        <div className="tech-specs">
-            {product.tags.slice(0,2).map(tag => (
-                <span key={tag} className="tech-tag">#{tag}</span>
-            ))}
-        </div>
-
-        <div className="card-footer">
-          <div className="price-block">
-            <span className="price-label">CREDITS</span>
-            <span className="price-value">${product.price}</span>
-          </div>
-          <button
-            className="cyber-button small"
-            disabled={product.stock === 0}
-            onClick={() => addToCart(product)}
-          >
-            {product.stock > 0 ? 'ADD +' : 'OUT OF STOCK'}
-          </button>
+        <div className="card-actions">
+            <div className="card-price">${product.price}</div>
+            <button
+                className="btn-add"
+                disabled={product.stock === 0}
+                onClick={(e) => {
+                    e.stopPropagation(); // Prevent triggering parent click if we add modal later
+                    addToCart(product);
+                }}
+            >
+                {product.stock > 0 ? 'ADD TO CART' : 'OUT OF STOCK'}
+            </button>
         </div>
       </div>
     </div>

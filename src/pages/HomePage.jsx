@@ -140,7 +140,7 @@ function HomePage() {
             <p className="eyebrow" style={{color: 'var(--cyber-cyan)'}}>TRENDING HARDWARE</p>
             <h2>TOP SELLING GEAR</h2>
           </div>
-          <NavLink to="/gamer-store" className="text-link" style={{color: 'var(--cyber-magenta)'}}>VER TODO >></NavLink>
+          <NavLink to="/gamer-store" className="text-link" style={{color: 'var(--cyber-magenta)'}}>VER TODO &gt;&gt;</NavLink>
         </header>
 
         <div className="products-grid-v2">
