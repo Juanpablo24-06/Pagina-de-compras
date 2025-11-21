@@ -1,0 +1,217 @@
+/* Header.css */
+.ml-header {
+  background-color: var(--bg-header);
+  color: var(--text-inverted); /* Usually black on yellow, or white on dark */
+  padding-top: 8px;
+  border-bottom: 1px solid var(--border-color);
+  transition: background-color 0.3s;
+}
+
+/* Theme Specific Overrides for Text Color in Header */
+/* In Dark Mode, header is dark, text is light */
+/* In Light Mode, header is Yellow, text is dark */
+body:not(.theme-light) .ml-header {
+    color: var(--text-main);
+}
+body.theme-light .ml-header {
+    color: #333;
+}
+
+.ml-header-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 10px;
+}
+
+/* --- ROW 1 --- */
+.ml-header-row-1 {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  padding-bottom: 10px;
+}
+
+.ml-logo {
+  display: flex;
+  align-items: center;
+  font-weight: 800;
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  color: inherit;
+  min-width: 160px;
+}
+
+.ml-logo-icon {
+    color: var(--primary);
+    margin-right: 5px;
+}
+
+.ml-search-form {
+  flex: 1;
+  display: flex;
+  box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);
+  background: #fff;
+  border-radius: 2px;
+  overflow: hidden;
+  height: 40px;
+}
+
+.ml-search-input {
+  flex: 1;
+  border: none;
+  padding: 10px 15px;
+  font-size: 16px;
+  color: #333;
+  outline: none;
+}
+
+.ml-search-btn {
+  background: #fff;
+  border: none;
+  border-left: 1px solid #e6e6e6;
+  padding: 0 15px;
+  color: #666;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.ml-search-btn:hover {
+    background: #f5f5f5;
+}
+
+.ml-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.ml-promo-text {
+    font-size: 0.9rem;
+    display: none; /* Hide on small screens */
+}
+@media (min-width: 1024px) {
+    .ml-promo-text { display: block; }
+}
+
+/* --- ROW 2 --- */
+.ml-header-row-2 {
+  display: flex;
+  align-items: flex-end; /* Align text to bottom */
+  justify-content: space-between;
+  padding-bottom: 8px;
+  font-size: 0.9rem;
+}
+
+.ml-location {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    min-width: 140px;
+    cursor: pointer;
+    padding: 4px 8px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+.ml-location:hover {
+    border-color: rgba(0,0,0,0.1);
+}
+.ml-location-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.1;
+}
+.ml-location-text .line-1 { font-size: 0.75rem; opacity: 0.7; }
+.ml-location-text .line-2 { font-size: 0.85rem; font-weight: 500; }
+
+.ml-nav-links {
+    display: flex;
+    gap: 1.2rem;
+    flex: 1;
+    justify-content: flex-start;
+    margin-left: 2rem;
+}
+
+.ml-nav-link {
+    color: inherit;
+    opacity: 0.7;
+    font-size: 0.9rem;
+    transition: opacity 0.2s;
+}
+.ml-nav-link:hover {
+    opacity: 1;
+}
+
+/* Dropdowns */
+.ml-categories-dropdown {
+    position: relative;
+    cursor: pointer;
+    opacity: 0.7;
+}
+.ml-categories-dropdown:hover { opacity: 1; }
+.ml-dropdown-content {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: var(--bg-card);
+    color: var(--text-main);
+    min-width: 200px;
+    box-shadow: var(--card-shadow);
+    border-radius: 4px;
+    padding: 10px 0;
+    z-index: 100;
+    border: 1px solid var(--border-color);
+}
+.ml-dropdown-content.right-aligned {
+    left: auto;
+    right: 0;
+}
+.ml-categories-dropdown:hover .ml-dropdown-content,
+.ml-user-dropdown:hover .ml-dropdown-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.ml-dropdown-content a, .ml-dropdown-content button {
+    padding: 10px 20px;
+    display: block;
+    text-align: left;
+    background: none;
+    color: var(--text-main);
+    width: 100%;
+}
+.ml-dropdown-content a:hover, .ml-dropdown-content button:hover {
+    background: var(--bg-surface);
+    color: var(--primary);
+}
+
+.ml-user-menu {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+.ml-user-dropdown {
+    position: relative;
+    cursor: pointer;
+}
+
+.ml-cart-icon {
+    background: none;
+    font-size: 1.2rem;
+    position: relative;
+    color: inherit;
+}
+.cart-badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: var(--danger);
+    color: white;
+    font-size: 0.7rem;
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
