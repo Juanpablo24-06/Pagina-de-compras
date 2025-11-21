@@ -152,7 +152,21 @@ function GamerStore() {
   });
   const [cart, setCart] = useState([]);
   const [showCheckout, setShowCheckout] = useState(false);
+  const [currentStep, setCurrentStep] = useState(1);
   const [userXP, setUserXP] = useState(1500); // Gamificación: Puntos de usuario
+  const [checkoutData, setCheckoutData] = useState({ email: '', address: '', paymentStatus: 'pending' });
+  const [formErrors, setFormErrors] = useState({});
+  const [orderStatus, setOrderStatus] = useState('borrador');
+  const [notifications, setNotifications] = useState([]);
+
+  // Lógica de Filtros
+  const filteredProducts = useMemo(() => {
+    return gamerProducts.filter((p) => {
+      const matchesSearch = p.name.toLowerCase().includes(filters.search.toLowerCase());
+      const matchesCategory = filters.category === 'Todos' || p.category === filters.category;
+      const matchesPrice = p.price <= filters.maxPrice;
+      return matchesSearch && matchesCategory && matchesPrice;
+    });
   const [favorites, setFavorites] = useState(() => {
     const stored = localStorage.getItem('gamer-favorites');
     return stored ? JSON.parse(stored) : [];
@@ -218,16 +232,71 @@ function GamerStore() {
   }, [filters]);
 
   // Lógica del Carrito
-  const addToCart = (product) => {
-    setCart(prev => {
-      const exists = prev.find(item => item.id === product.id);
-      if (exists) return prev.map(item => item.id === product.id ? { ...item, qty: item.qty + 1 } : item);
-      return [...prev, { ...product, qty: 1 }];
+  const pushNotification = (message, intent = 'info') => {
+    const id = crypto.randomUUID();
+    setNotifications((prev) => [...prev, { id, message, intent }]);
+    setTimeout(() => {
+      setNotifications((prev) => prev.filter((n) => n.id !== id));
+    }, 3000);
+  };
+
+  const addToCart = (product, goToCheckout = false) => {
+    setCart((prev) => {
+      const exists = prev.find((item) => item.id === product.id);
+      if (exists && exists.qty >= product.stock) {
+        pushNotification(`Stock agotado para ${product.name}`, 'warning');
+        return prev;
+      }
+
+      const updatedCart = exists
+        ? prev.map((item) =>
+            item.id === product.id
+              ? { ...item, qty: Math.min(item.qty + 1, product.stock) }
+              : item
+          )
+        : [...prev, { ...product, qty: 1 }];
+
+      pushNotification(`${product.name} añadido al carrito`, 'success');
+      if (goToCheckout) {
+        setShowCheckout(true);
+        setCurrentStep(1);
+      }
+
+      return updatedCart;
     });
   };
 
-  const removeFromCart = (id) => setCart(prev => prev.filter(item => item.id !== id));
+  const removeFromCart = (id) => setCart((prev) => prev.filter((item) => item.id !== id));
+  const handleQuantityChange = (id, value) => {
+    setCart((prev) =>
+      prev.map((item) => {
+        if (item.id !== id) return item;
+        const safeQty = Math.min(Math.max(Number(value) || 1, 1), item.stock);
+        return { ...item, qty: safeQty };
+      })
+    );
+  };
+
   const cartTotal = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+  const cartItemsCount = cart.reduce((acc, item) => acc + item.qty, 0);
+  const loyaltyPointsEarned = Math.max(10, Math.floor(cartTotal / 8));
+
+  const proceedToCheckout = () => {
+    if (cart.length === 0) {
+      pushNotification('Agrega productos antes de avanzar al checkout', 'warning');
+      return;
+    }
+    setShowCheckout(true);
+    setCurrentStep(1);
+  };
+
+  const validateStepTwo = () => {
+    const errors = {};
+    if (!checkoutData.email.includes('@')) errors.email = 'Ingresa un correo válido para notificaciones.';
+    if (checkoutData.address.trim().length < 6) errors.address = 'Completa una dirección de entrega.';
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
 
   const toggleFavorite = (productId) => {
     setFavorites((prev) =>
@@ -261,15 +330,29 @@ function GamerStore() {
 
   // Simulación de Checkout
   const handleCheckout = () => {
-    alert(`¡Compra exitosa! Has ganado ${Math.floor(cartTotal / 10)} XP`);
-    setUserXP(prev => prev + Math.floor(cartTotal / 10));
-    setCart([]);
-    setShowCheckout(false);
+    if (!validateStepTwo()) {
+      setCurrentStep(2);
+      return;
+    }
+
+    setCheckoutData((prev) => ({ ...prev, paymentStatus: 'processing' }));
+    setOrderStatus('pagando');
+    pushNotification('Redirigiendo a Mercado Pago...', 'info');
+
+    setTimeout(() => {
+      setCheckoutData((prev) => ({ ...prev, paymentStatus: 'approved' }));
+      setOrderStatus('pagado');
+      setUserXP((prev) => prev + loyaltyPointsEarned);
+      pushNotification(`Pago aprobado. ${loyaltyPointsEarned} puntos añadidos a tu perfil.`, 'success');
+      setCart([]);
+      setShowCheckout(false);
+      setCurrentStep(1);
+    }, 1400);
   };
 
   return (
     <div className="store-container">
-      {/* --- Sidebar de Filtros --- */ }
+      {/* --- Sidebar de Filtros --- */}
       <aside className="filters-panel">
         <h3 className="filters-title">Configuración</h3>
 
@@ -280,7 +363,7 @@ function GamerStore() {
             className="store-input"
             placeholder="Ej: teclado, Xbox, streaming..."
             value={filters.search}
-            onChange={(e) => setFilters({...filters, search: e.target.value})}
+            onChange={(e) => setFilters({ ...filters, search: e.target.value })}
           />
           <p className="hint">Resultados incluyen nombre, descripción y tags.</p>
         </div>
@@ -317,7 +400,7 @@ function GamerStore() {
             step="50"
             className="range-slider"
             value={filters.maxPrice}
-            onChange={(e) => setFilters({...filters, maxPrice: Number(e.target.value)})}
+            onChange={(e) => setFilters({ ...filters, maxPrice: Number(e.target.value) })}
           />
         </div>
 
@@ -371,16 +454,16 @@ function GamerStore() {
 
         {/* Widget de Usuario (Gamificación) */}
         <div className="cart-summary-panel">
-          <h4 style={{color: '#fff', margin: 0}}>Nivel de Jugador</h4>
+          <h4 style={{ color: '#fff', margin: 0 }}>Nivel de Jugador</h4>
           <div className="xp-bar-container">
-            <div className="xp-bar-fill" style={{width: `${(userXP % 1000) / 10}%`}}></div>
+            <div className="xp-bar-fill" style={{ width: `${(userXP % 1000) / 10}%` }}></div>
           </div>
           <small style={{color: 'var(--primary-cyan)'}}>{userXP} XP Totales</small>
           <p className="hint">Suma XP con compras y reviews positivas.</p>
         </div>
       </aside>
 
-      {/* --- Contenido Principal --- */ }
+      {/* --- Contenido Principal --- */}
       <main>
         <header className="store-hero">
           <div>
@@ -434,56 +517,120 @@ function GamerStore() {
                   <span>Total</span>
                   <span>${cartTotal.toFixed(2)}</span>
                 </div>
-                <button className="btn-primary" onClick={handleCheckout}>Confirmar Adquisición</button>
-              </>
+              </div>
+            )}
+
+            {currentStep === 2 && (
+              <div className="step-content">
+                <h3>Datos de contacto y entrega</h3>
+                <div className="form-grid">
+                  <label>
+                    Correo para notificaciones
+                    <input
+                      type="email"
+                      className={`store-input ${formErrors.email ? 'input-error' : ''}`}
+                      placeholder="nombre@correo.com"
+                      value={checkoutData.email}
+                      onChange={(e) => setCheckoutData({ ...checkoutData, email: e.target.value })}
+                    />
+                    {formErrors.email && <span className="form-error">{formErrors.email}</span>}
+                  </label>
+                  <label>
+                    Dirección de entrega
+                    <input
+                      type="text"
+                      className={`store-input ${formErrors.address ? 'input-error' : ''}`}
+                      placeholder="Calle 123, Ciudad"
+                      value={checkoutData.address}
+                      onChange={(e) => setCheckoutData({ ...checkoutData, address: e.target.value })}
+                    />
+                    {formErrors.address && <span className="form-error">{formErrors.address}</span>}
+                  </label>
+                </div>
+                <div className="checkout-actions">
+                  <button className="btn-add" onClick={() => setCurrentStep(1)}>
+                    Volver al carrito
+                  </button>
+                  <button className="btn-primary" onClick={() => setCurrentStep(3)} disabled={!validateStepTwo()}>
+                    Ir a pasarela
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {currentStep === 3 && (
+              <div className="step-content">
+                <h3>Mercado Pago y sincronización de estado</h3>
+                <div className="payment-box">
+                  <p className="muted">Método</p>
+                  <div className="payment-row">
+                    <div>
+                      <strong>Mercado Pago</strong>
+                      <p className="muted">Pago seguro con status en tiempo real.</p>
+                    </div>
+                    <span className={`status-pill status-${checkoutData.paymentStatus}`}>
+                      {checkoutData.paymentStatus === 'pending' && 'Pendiente'}
+                      {checkoutData.paymentStatus === 'processing' && 'Procesando'}
+                      {checkoutData.paymentStatus === 'approved' && 'Aprobado'}
+                    </span>
+                  </div>
+                  <div className="summary-row">
+                    <div>
+                      <p className="muted">Total</p>
+                      <h3 style={{ margin: 0 }}>${cartTotal.toFixed(2)}</h3>
+                    </div>
+                    <div>
+                      <p className="muted">Puntos a ganar</p>
+                      <strong className="text-gradient">{loyaltyPointsEarned} XP</strong>
+                    </div>
+                  </div>
+                  <button
+                    className="btn-primary"
+                    onClick={handleCheckout}
+                    disabled={checkoutData.paymentStatus === 'processing'}
+                  >
+                    Pagar con Mercado Pago
+                  </button>
+                </div>
+              </div>
             )}
           </div>
         ) : (
-          <>
-            <div className="products-grid">
-              {filteredProducts.map(product => (
-                <div key={product.id} className="product-card">
-                  {product.deal && <span className="card-badge">-15% OFF</span>}
-                  <div className="product-media">
-                    <span className="media-emoji" aria-hidden>{product.image}</span>
-                    <button
-                      className={favorites.includes(product.id) ? 'favorite active' : 'favorite'}
-                      onClick={() => toggleFavorite(product.id)}
-                      aria-label="Guardar en favoritos"
-                    >
-                      {favorites.includes(product.id) ? '★' : '☆'}
-                    </button>
-                  </div>
-                  <div className="card-content">
-                    <span className="product-category">{product.category} | {product.platform}</span>
-                    <h3 className="product-title">{product.name}</h3>
-                    <p className="product-description">{product.tagline}</p>
-                    <div className="rating-row">
-                      <span className="rating-pill">{product.rating} ⭐</span>
-                      <span className="stock-pill">{product.stock} en stock</span>
-                    </div>
-                    <div className="tags-row">
-                      {product.tags.map((tag) => (
-                        <span key={tag} className="chip">#{tag}</span>
-                      ))}
-                    </div>
-                    <div className="card-footer">
-                      <span className="product-price">${product.price}</span>
-                      <div className="actions">
-                        <button className="btn-add" onClick={() => addToCart(product)}>+ Agregar</button>
-                      </div>
-                    </div>
-                    <div className="reviews-block">
-                      {reviewsLoading ? (
-                        <p className="hint">Cargando reseñas...</p>
-                      ) : getReviewsForProduct(product.id).length ? (
-                        <>
-                          <p className="hint">Último comentario: "{getReviewsForProduct(product.id)[0].comment}"</p>
-                          <small className="eyebrow">{getReviewsForProduct(product.id).length} reseñas verificadas vía API</small>
-                        </>
-                      ) : (
-                        <p className="hint">Sé el primero en dejar feedback.</p>
-                      )}
+          <div className="products-grid">
+            {filteredProducts.map((product) => (
+              <div key={product.id} className="product-card">
+                {product.deal && <span className="card-badge">-15% OFF</span>}
+                <div
+                  style={{
+                    height: '150px',
+                    background: '#000',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '4rem',
+                  }}
+                >
+                  {product.image}
+                </div>
+                <div className="card-content">
+                  <span className="product-category">
+                    {product.category} | {product.platform}
+                  </span>
+                  <h3 className="product-title">{product.name}</h3>
+                  <p className="product-description">{product.tagline}</p>
+                  <div className="card-footer">
+                    <span className="product-price">${product.price}</span>
+                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                      <button className="btn-add" onClick={() => addToCart(product)} disabled={product.stock === 0}>
+                        + Agregar
+                      </button>
+                      <button
+                        className="btn-add"
+                        style={{ borderColor: 'var(--primary-magenta)', color: 'var(--primary-magenta)' }}
+                        onClick={() => addToCart(product, true)}
+                      >
+                        Comprar ahora
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -517,6 +664,14 @@ function GamerStore() {
             </section>
           </>
         )}
+
+        <div className="toast-stack">
+          {notifications.map((note) => (
+            <div key={note.id} className={`toast toast-${note.intent}`}>
+              {note.message}
+            </div>
+          ))}
+        </div>
       </main>
     </div>
   );
