@@ -5,6 +5,7 @@ import ProductCard from './ProductCard';
 import './StoreStyles.css';
 
 function StoreLayout() {
+  /* 1. Aceptamos 'isLoading' para manejar el estado de carga */
   const { products, isLoading } = useStore();
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -16,6 +17,7 @@ function StoreLayout() {
   const searchTerm = searchParams.get('search') || '';
 
   // Derived Data
+  /* 2. Usamos useMemo para evitar cálculos innecesarios en cada render */
   const categories = useMemo(() => {
       if (isLoading) return [];
       const cats = new Set(products.map(p => p.category));
@@ -25,6 +27,7 @@ function StoreLayout() {
   // Filter Logic
   const filteredProducts = useMemo(() => {
     return products.filter(p => {
+        /* 3. Búsqueda robusta: Nombre OR Categoría OR Tags (con chequeo de seguridad) */
         const matchesSearch = p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                               p.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
                               (p.tags && p.tags.some(t => t.includes(searchTerm.toLowerCase())));
@@ -39,6 +42,7 @@ function StoreLayout() {
     });
   }, [products, searchTerm, selectedCategory, priceRange]);
 
+  /* 4. Retorno temprano si está cargando */
   if (isLoading) return <div style={{padding: '4rem', textAlign: 'center'}}>Cargando catálogo...</div>;
 
   return (

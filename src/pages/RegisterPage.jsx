@@ -57,6 +57,8 @@ function RegisterPage() {
                 {error && <div className="auth-error">{error}</div>}
 
                 <button type="submit" className="auth-btn-primary">Continuar</button>
+                
+                {/* SOLUCIÓN: Navegamos explícitamente al login */}
                 <button type="button" className="auth-btn-link" onClick={() => navigate('/login')}>
                     Ya tengo cuenta
                 </button>

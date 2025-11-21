@@ -11,6 +11,12 @@ export const useStore = () => {
   return context;
 };
 
+/* SOLUCIÓN DEL CONFLICTO:
+   Hemos eliminado 'INITIAL_PRODUCTS' porque el estado se inicializa 
+   vacío y se llena mediante 'productService.getAll()' en el useEffect.
+   Mantener el array hardcodeado aquí era código muerto.
+*/
+
 export const StoreProvider = ({ children }) => {
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);

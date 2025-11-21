@@ -12,6 +12,7 @@ function ProductCard({ product }) {
   }, [product.price, product.originalPrice]);
 
   return (
+    /* Usamos NavLink para envolver la tarjeta completa */
     <NavLink to={`/product/${product.id}`} className="ml-card-link">
         <div className="ml-card">
         <div className="ml-card-image">
@@ -44,9 +45,8 @@ function ProductCard({ product }) {
                 <button
                     className="ml-card-btn-cart"
                     onClick={(e) => {
-                        e.preventDefault();
-                        // e.stopPropagation() might be needed depending on structure,
-                        // but since button is inside NavLink, we must prevent navigation
+                        /* Vital: Prevenimos la navegación del NavLink padre */
+                        e.preventDefault(); 
                         addToCart(product);
                     }}
                 >
