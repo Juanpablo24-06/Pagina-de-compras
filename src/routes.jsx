@@ -36,13 +36,36 @@ export const router = createBrowserRouter(
           path: 'gamer-store',
           element: <GamerStoreFromJira />,
         },
+        /* NUEVA RUTA: Detalle de producto (Vital para las ProductCards) */
+        {
+          path: 'product/:id',
+          element: <ProductDetailPage />,
+        },
         {
           path: 'admin',
           element: <AdminDashboard />,
         },
+        /* NUEVAS RUTAS DE AUTH: Soportan el nuevo flujo de Login/Registro separado */
         {
           path: 'auth',
-          element: <AuthPage />,
+          element: <LoginPage />, // Redirigimos auth por defecto al login
+        },
+        {
+          path: 'login',
+          element: <LoginPage />,
+        },
+        {
+          path: 'register',
+          element: <RegisterPage />,
+        },
+        {
+          path: 'profile',
+          element: <AuthPage />, // La página vieja de Auth ahora sirve como perfil
+        },
+        {
+          path: 'user-story-generator', // (Opcional) Si tenías esta ruta en otro lado
+           // element: ...
+           element: <NotFoundPage /> // Placeholder si no existe
         },
         {
           path: '*',

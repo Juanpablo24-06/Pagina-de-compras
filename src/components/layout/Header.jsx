@@ -95,8 +95,8 @@ function Header() {
                      </div>
                 ) : (
                     <>
-                        <NavLink to="/auth" className="ml-nav-link">Crea tu cuenta</NavLink>
-                        <NavLink to="/auth" className="ml-nav-link">Ingresa</NavLink>
+                        <NavLink to="/register" className="ml-nav-link">Crea tu cuenta</NavLink>
+                        <NavLink to="/login" className="ml-nav-link">Ingresa</NavLink>
                     </>
                 )}
                 <NavLink to="/gamer-store" className="ml-nav-link">Mis compras</NavLink>

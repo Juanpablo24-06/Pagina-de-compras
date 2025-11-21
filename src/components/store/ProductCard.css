@@ -1,9 +1,19 @@
 /* ProductCard.css */
+
+/* Mantenemos esto de la rama 'jules' para poder envolver la card en un Link */
+.ml-card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  height: 100%;
+}
+
 .ml-card {
   background-color: var(--bg-card);
   border-radius: 4px;
   box-shadow: var(--card-shadow);
-  transition: box-shadow 0.2s;
+  /* Mantenemos la transición de transformación para el efecto pop */
+  transition: box-shadow 0.2s, transform 0.2s ease-out;
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -13,7 +23,10 @@
 }
 
 .ml-card:hover {
-  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+  /* Sombra más pronunciada y ligero zoom de la rama 'jules' */
+  box-shadow: 0 10px 20px rgba(0,0,0,0.25);
+  transform: scale(1.02);
+  z-index: 1;
 }
 
 .ml-card-image {
@@ -81,12 +94,9 @@
     font-weight: 600;
 }
 
+/* Limpieza del conflicto de cuotas: Se deja en verde (típico "Sin interés") */
 .ml-card-installments {
     font-size: 0.85rem;
-    color: var(--text-main); /* Sometimes green in ML, but often plain */
-}
-/* Often ML puts installments in Green if it's "Sin Interes" */
-.ml-card-installments {
     color: var(--shipping-green);
 }
 
@@ -100,7 +110,7 @@
 .ml-card-actions {
     margin-top: auto; /* Push to bottom */
     padding-top: 1rem;
-    opacity: 0; /* Hidden until hover in desktop usually, but let's make it visible for UX or on hover */
+    opacity: 0; /* Hidden until hover */
     transition: opacity 0.2s;
 }
 .ml-card:hover .ml-card-actions {
@@ -114,6 +124,9 @@
     color: var(--btn-primary-text);
     border-radius: 4px;
     font-weight: 600;
+    /* Esto es CRÍTICO: asegura que el botón esté "arriba" del link de la tarjeta */
+    position: relative;
+    z-index: 2; 
 }
 .ml-card-btn-cart:hover {
     opacity: 0.9;
