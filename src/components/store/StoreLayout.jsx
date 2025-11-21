@@ -5,7 +5,7 @@ import ProductCard from './ProductCard';
 import './StoreStyles.css';
 
 function StoreLayout() {
-  const { products, isLoading } = useStore();
+  const { products } = useStore();
   const [searchParams, setSearchParams] = useSearchParams();
 
   // Filters State
@@ -16,18 +16,13 @@ function StoreLayout() {
   const searchTerm = searchParams.get('search') || '';
 
   // Derived Data
-  const categories = useMemo(() => {
-      if (isLoading) return [];
-      const cats = new Set(products.map(p => p.category));
-      return ['All', ...Array.from(cats)];
-  }, [products, isLoading]);
+  const categories = ['All', ...new Set(products.map(p => p.category))];
 
   // Filter Logic
   const filteredProducts = useMemo(() => {
     return products.filter(p => {
         const matchesSearch = p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                              p.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                              (p.tags && p.tags.some(t => t.includes(searchTerm.toLowerCase())));
+                              p.tags.some(t => t.includes(searchTerm.toLowerCase()));
 
         const matchesCategory = selectedCategory === 'All' || p.category === selectedCategory;
 
@@ -38,8 +33,6 @@ function StoreLayout() {
         return matchesSearch && matchesCategory && matchesPrice;
     });
   }, [products, searchTerm, selectedCategory, priceRange]);
-
-  if (isLoading) return <div style={{padding: '4rem', textAlign: 'center'}}>Cargando catálogo...</div>;
 
   return (
     <div className="ml-store-layout container">

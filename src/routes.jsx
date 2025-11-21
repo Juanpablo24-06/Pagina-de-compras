@@ -37,28 +37,12 @@ export const router = createBrowserRouter(
           element: <GamerStoreFromJira />,
         },
         {
-          path: 'product/:id',
-          element: <ProductDetailPage />,
-        },
-        {
           path: 'admin',
           element: <AdminDashboard />,
         },
         {
           path: 'auth',
-          element: <LoginPage />, // Default auth route
-        },
-        {
-          path: 'login',
-          element: <LoginPage />,
-        },
-        {
-          path: 'register',
-          element: <RegisterPage />,
-        },
-        {
-          path: 'profile',
-          element: <AuthPage />, // Renaming old AuthPage to Profile effectively
+          element: <AuthPage />,
         },
         {
           path: '*',
