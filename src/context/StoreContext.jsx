@@ -1,4 +1,5 @@
 import { createContext, useContext, useMemo, useState, useEffect, useCallback } from 'react';
+import { productService } from '../services/productService';
 
 const StoreContext = createContext();
 
@@ -270,7 +271,8 @@ const INITIAL_PRODUCTS = [
 ];
 
 export const StoreProvider = ({ children }) => {
-  const [products, setProducts] = useState(INITIAL_PRODUCTS);
+  const [products, setProducts] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [cart, setCart] = useState([]);
   const [userXP, setUserXP] = useState(1500);
   const [favorites, setFavorites] = useState(() => {
@@ -283,6 +285,22 @@ export const StoreProvider = ({ children }) => {
   });
 
   const [notifications, setNotifications] = useState([]);
+
+  // Load initial data
+  useEffect(() => {
+    const loadData = async () => {
+        try {
+            const data = await productService.getAll();
+            setProducts(data);
+        } catch (err) {
+            console.error("Error loading products", err);
+            // Could handle error UI here
+        } finally {
+            setIsLoading(false);
+        }
+    };
+    loadData();
+  }, []);
 
   // Persistencia básica
   useEffect(() => {
@@ -359,6 +377,7 @@ export const StoreProvider = ({ children }) => {
 
   const value = {
     products,
+    isLoading,
     cart,
     favorites,
     userXP,

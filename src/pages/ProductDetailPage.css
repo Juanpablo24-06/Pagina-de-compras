@@ -1,0 +1,203 @@
+.ml-detail-page {
+    padding-top: 2rem;
+    padding-bottom: 4rem;
+}
+
+.ml-detail-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 3rem;
+    background: var(--bg-card);
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: var(--card-shadow);
+}
+
+@media (max-width: 768px) {
+    .ml-detail-grid { grid-template-columns: 1fr; }
+}
+
+/* Gallery */
+.detail-gallery {
+    display: flex;
+    gap: 1rem;
+}
+.gallery-thumbnails {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.thumb {
+    width: 50px;
+    height: 50px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    cursor: pointer;
+    padding: 2px;
+}
+.thumb:hover { border-color: var(--primary); }
+.thumb img { width: 100%; height: 100%; object-fit: contain; }
+
+.gallery-main {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    border-radius: 4px;
+    min-height: 400px;
+}
+.gallery-main img {
+    max-width: 100%;
+    max-height: 400px;
+    object-fit: contain;
+}
+
+/* Info */
+.detail-info {
+    display: flex;
+    flex-direction: column;
+    color: var(--text-main);
+}
+
+.condition-subtitle {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+}
+
+.detail-title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem 0;
+    line-height: 1.2;
+}
+
+.detail-rating {
+    color: var(--primary);
+    margin-bottom: 1rem;
+    font-size: 1rem;
+}
+.detail-rating span { color: var(--text-muted); font-size: 0.8rem; }
+
+.deal-badge {
+    background: var(--primary);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    align-self: flex-start;
+    margin-bottom: 1rem;
+}
+
+.price-block { margin-bottom: 1rem; }
+.original-price { text-decoration: line-through; color: var(--text-muted); font-size: 1rem; }
+.current-price-row { display: flex; align-items: center; gap: 1rem; }
+.current-price { font-size: 2.5rem; font-weight: 300; }
+.discount-tag { color: var(--shipping-green); font-size: 1.2rem; }
+
+.installments-info {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+}
+.installments-info span { color: var(--shipping-green); }
+
+.shipping-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    margin-bottom: 2rem;
+}
+
+.specs-preview {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+.spec-pill {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+}
+
+/* Buttons */
+.buy-box {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+.btn-buy-now {
+    background: var(--btn-primary-bg);
+    color: var(--btn-primary-text);
+    padding: 14px;
+    border-radius: 6px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border: none;
+}
+.btn-buy-now:hover { opacity: 0.9; }
+
+.btn-add-cart {
+    background: rgba(65, 137, 230, 0.15);
+    color: var(--primary);
+    padding: 14px;
+    border-radius: 6px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border: none;
+}
+.btn-add-cart:hover { background: rgba(65, 137, 230, 0.25); }
+
+.benefits-list p {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin: 8px 0;
+}
+
+/* Description */
+.detail-description-section {
+    margin-top: 2rem;
+    background: var(--bg-card);
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: var(--card-shadow);
+    color: var(--text-main);
+}
+.detail-description-section h3 {
+    font-size: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+}
+.description-text {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: var(--text-muted);
+}
+.tagline {
+    font-style: italic;
+    font-size: 1.2rem;
+    color: var(--text-main);
+    border-left: 4px solid var(--primary);
+    padding-left: 1rem;
+    margin: 2rem 0;
+}
+
+.specs-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
+}
+.specs-list li {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    background: var(--bg-surface);
+    border-radius: 4px;
+}

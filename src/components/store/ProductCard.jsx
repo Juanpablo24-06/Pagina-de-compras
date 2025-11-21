@@ -49,8 +49,7 @@ function ProductCard({ product }) {
                 Agregar
              </button>
         </div>
-      </div>
-    </div>
+    </NavLink>
   );
 }
 

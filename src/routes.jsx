@@ -3,9 +3,12 @@ import MainLayout from './layouts/MainLayout';
 import HomePage from './pages/HomePage';
 import FidelidadPage from './pages/FidelidadPage';
 import GamerStoreFromJira from './pages/GamerStoreFromJira';
+import ProductDetailPage from './pages/ProductDetailPage';
 import NotFoundPage from './pages/NotFoundPage';
 import AdminDashboard from './pages/AdminDashboard';
 import AuthPage from './pages/AuthPage';
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
 import { StoreProvider } from './context/StoreContext';
 
 // Wrapper to provide StoreContext to the entire layout
