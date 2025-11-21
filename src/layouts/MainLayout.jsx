@@ -49,6 +49,41 @@ function MainLayout() {
       </main>
 
       <footer className="app-footer">
+        <div className="footer-grid">
+          <div>
+            <div className="footer-brand">Nexus Prime</div>
+            <p className="footer-copy">
+              Home, contenido y comunicación alineados a la identidad gamer, sin tocar la lógica de auth ni checkout.
+            </p>
+            <div className="footer-social">
+              <span className="pill-badge">Discord</span>
+              <span className="pill-badge">Twitch</span>
+              <span className="pill-badge">YouTube</span>
+            </div>
+          </div>
+
+          <div className="footer-columns">
+            <div>
+              <p className="footer-title">Navegación</p>
+              <NavLink to="/" className="footer-link">Home</NavLink>
+              <NavLink to="/gamer-store" className="footer-link">Catálogo gamer</NavLink>
+              <NavLink to="/fidelidad" className="footer-link">Fidelidad</NavLink>
+            </div>
+            <div>
+              <p className="footer-title">Políticas</p>
+              <span className="footer-link">Envíos y entregas</span>
+              <span className="footer-link">Cambios y devoluciones</span>
+              <span className="footer-link">Privacidad</span>
+            </div>
+            <div>
+              <p className="footer-title">Soporte</p>
+              <span className="footer-link">Centro de ayuda</span>
+              <span className="footer-link">Estado del sistema</span>
+              <span className="footer-link">Contáctanos</span>
+            </div>
+          </div>
+        </div>
+
         <div className="footer-meta">
           <small style={{ color: '#64748b' }}>© {new Date().getFullYear()} Nexus Prime Systems. All rights reserved.</small>
           <span className="build-chip">v2.0.0 [STABLE]</span>
