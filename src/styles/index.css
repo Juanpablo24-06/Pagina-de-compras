@@ -1,11 +1,57 @@
 :root {
-  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-  background-color: var(--bg-deep, #0b1021);
-  color: #e2e8f0;
+  /* --- DARK MODE (DEFAULT / GAMER) --- */
+  --bg-deep: #0b1021;
+  --bg-surface: #1a2035;
+  --bg-card: #1e293b;
+  --bg-header: #0f172a;
+  --bg-header-row2: #1e293b;
+
+  --text-main: #e2e8f0;
+  --text-muted: #94a3b8;
+  --text-inverted: #000000;
+
+  --primary: #00f3ff; /* Cyber Cyan */
+  --secondary: #bc13fe; /* Neon Purple */
+  --accent: #f59e0b; /* Amber/Yellow for contrast */
+  --success: #10b981;
+  --danger: #ef4444;
+
+  --border-color: #334155;
+  --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+
+  --btn-primary-bg: #00f3ff;
+  --btn-primary-text: #000000;
+
+  /* Specific Mercado Libre-ish accents in Dark Mode */
+  --ml-yellow: #ffe600; /* Classic ML Yellow, might use as accent */
+  --ml-blue: #3483fa;
+  --shipping-green: #00a650;
 }
 
+/* --- LIGHT MODE (MERCADO LIBRE STYLE) --- */
+body.theme-light {
+  --bg-deep: #ebebeb; /* ML Light Gray Background */
+  --bg-surface: #ffffff;
+  --bg-card: #ffffff;
+  --bg-header: #fff159; /* ML Yellow */
+  --bg-header-row2: #fff159; /* Often just yellow or slight variation */
+
+  --text-main: #333333;
+  --text-muted: #666666;
+  --text-inverted: #ffffff;
+
+  --primary: #3483fa; /* ML Blue */
+  --secondary: #2968c8;
+  --accent: #3483fa;
+
+  --border-color: #e6e6e6;
+  --card-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+
+  --btn-primary-bg: #3483fa;
+  --btn-primary-text: #ffffff;
+}
+
+/* Global Resets & Utilities */
 * {
   box-sizing: border-box;
 }
@@ -13,10 +59,61 @@
 body {
   margin: 0;
   min-height: 100vh;
-  background: var(--bg-deep, #0b1021);
-  color: var(--text-main, #e2e8f0);
+  font-family: 'Proxima Nova', -apple-system, 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;
+  background-color: var(--bg-deep);
+  color: var(--text-main);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 a {
-  font-weight: 600;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+ul, li {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  outline: none;
+}
+
+/* Utility Classes */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.flex { display: flex; }
+.items-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.gap-2 { gap: 0.5rem; }
+.gap-4 { gap: 1rem; }
+
+/* Text Utils */
+.text-sm { font-size: 0.875rem; }
+.text-xs { font-size: 0.75rem; }
+.font-bold { font-weight: 600; }
+.text-muted { color: var(--text-muted); }
+.text-success { color: var(--shipping-green); }
+
+/* ML Style Badge */
+.badge-full {
+  background-color: #00a650;
+  color: white;
+  padding: 2px 6px;
+  border-radius: 2px;
+  font-size: 10px;
+  font-weight: 700;
+  font-style: italic;
+  text-transform: uppercase;
+  display: inline-block;
+  margin-left: 4px;
 }
