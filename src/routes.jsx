@@ -28,6 +28,8 @@ export const router = createBrowserRouter(
         {
           path: 'admin',
           element: <AdminDashboard />,
+        },
+        {
           path: 'auth',
           element: <AuthPage />,
         },

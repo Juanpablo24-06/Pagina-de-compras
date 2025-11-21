@@ -160,13 +160,6 @@ function GamerStore() {
   const [notifications, setNotifications] = useState([]);
 
   // Lógica de Filtros
-  const filteredProducts = useMemo(() => {
-    return gamerProducts.filter((p) => {
-      const matchesSearch = p.name.toLowerCase().includes(filters.search.toLowerCase());
-      const matchesCategory = filters.category === 'Todos' || p.category === filters.category;
-      const matchesPrice = p.price <= filters.maxPrice;
-      return matchesSearch && matchesCategory && matchesPrice;
-    });
   const [favorites, setFavorites] = useState(() => {
     const stored = localStorage.getItem('gamer-favorites');
     return stored ? JSON.parse(stored) : [];
@@ -496,28 +489,53 @@ function GamerStore() {
         </div>
 
         {showCheckout ? (
-          <div className="cart-summary-panel" style={{animation: 'fadeIn 0.3s'}}>
-            <h2 style={{color: 'white'}}>Tu Inventario (Carrito)</h2>
+          <div className="cart-summary-panel" style={{ animation: 'fadeIn 0.3s' }}>
+            <h2 style={{ color: 'white' }}>Tu Inventario (Carrito)</h2>
             {cart.length === 0 ? (
-              <p style={{color: 'var(--text-muted)'}}>Tu inventario está vacío. Ve a buscar loot.</p>
+              <p style={{ color: 'var(--text-muted)' }}>Tu inventario está vacío. Ve a buscar loot.</p>
             ) : (
               <>
-                <ul style={{listStyle: 'none', padding: 0}}>
-                  {cart.map(item => (
-                    <li key={item.id} style={{display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(195,255,255,0.1)', padding: '1rem 0', color: 'white'}}>
-                      <span>{item.qty}x {item.name}</span>
+                <ul style={{ listStyle: 'none', padding: 0 }}>
+                  {cart.map((item) => (
+                    <li
+                      key={item.id}
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        borderBottom: '1px solid rgba(195,255,255,0.1)',
+                        padding: '1rem 0',
+                        color: 'white',
+                      }}
+                    >
+                      <span>
+                        {item.qty}x {item.name}
+                      </span>
                       <div>
-                        <span style={{marginRight: '1rem'}}>${(item.price * item.qty).toFixed(2)}</span>
-                        <button onClick={() => removeFromCart(item.id)} style={{background: 'none', border: 'none', color: '#ff4444', cursor: 'pointer'}}>✕</button>
+                        <span style={{ marginRight: '1rem' }}>${(item.price * item.qty).toFixed(2)}</span>
+                        <button
+                          onClick={() => removeFromCart(item.id)}
+                          style={{ background: 'none', border: 'none', color: '#ff4444', cursor: 'pointer' }}
+                        >
+                          ✕
+                        </button>
                       </div>
                     </li>
                   ))}
                 </ul>
-                <div style={{display: 'flex', justifyContent: 'space-between', marginTop: '1rem', color: 'var(--primary-cyan)', fontSize: '1.2rem', fontWeight: 'bold'}}>
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    marginTop: '1rem',
+                    color: 'var(--primary-cyan)',
+                    fontSize: '1.2rem',
+                    fontWeight: 'bold',
+                  }}
+                >
                   <span>Total</span>
                   <span>${cartTotal.toFixed(2)}</span>
                 </div>
-              </div>
+              </>
             )}
 
             {currentStep === 2 && (
@@ -596,41 +614,43 @@ function GamerStore() {
             )}
           </div>
         ) : (
-          <div className="products-grid">
-            {filteredProducts.map((product) => (
-              <div key={product.id} className="product-card">
-                {product.deal && <span className="card-badge">-15% OFF</span>}
-                <div
-                  style={{
-                    height: '150px',
-                    background: '#000',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: '4rem',
-                  }}
-                >
-                  {product.image}
-                </div>
-                <div className="card-content">
-                  <span className="product-category">
-                    {product.category} | {product.platform}
-                  </span>
-                  <h3 className="product-title">{product.name}</h3>
-                  <p className="product-description">{product.tagline}</p>
-                  <div className="card-footer">
-                    <span className="product-price">${product.price}</span>
-                    <div style={{ display: 'flex', gap: '0.5rem' }}>
-                      <button className="btn-add" onClick={() => addToCart(product)} disabled={product.stock === 0}>
-                        + Agregar
-                      </button>
-                      <button
-                        className="btn-add"
-                        style={{ borderColor: 'var(--primary-magenta)', color: 'var(--primary-magenta)' }}
-                        onClick={() => addToCart(product, true)}
-                      >
-                        Comprar ahora
-                      </button>
+          <>
+            <div className="products-grid">
+              {filteredProducts.map((product) => (
+                <div key={product.id} className="product-card">
+                  {product.deal && <span className="card-badge">-15% OFF</span>}
+                  <div
+                    style={{
+                      height: '150px',
+                      background: '#000',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: '4rem',
+                    }}
+                  >
+                    {product.image}
+                  </div>
+                  <div className="card-content">
+                    <span className="product-category">
+                      {product.category} | {product.platform}
+                    </span>
+                    <h3 className="product-title">{product.name}</h3>
+                    <p className="product-description">{product.tagline}</p>
+                    <div className="card-footer">
+                      <span className="product-price">${product.price}</span>
+                      <div style={{ display: 'flex', gap: '0.5rem' }}>
+                        <button className="btn-add" onClick={() => addToCart(product)} disabled={product.stock === 0}>
+                          + Agregar
+                        </button>
+                        <button
+                          className="btn-add"
+                          style={{ borderColor: 'var(--primary-magenta)', color: 'var(--primary-magenta)' }}
+                          onClick={() => addToCart(product, true)}
+                        >
+                          Comprar ahora
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
