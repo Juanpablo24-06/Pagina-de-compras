@@ -1,3 +1,5 @@
+@import '../components/store/StoreStyles.css';
+
 /* src/pages/PageStyles.css */
 :root {
   --bg-deep: #050505;
@@ -107,19 +109,14 @@ body {
 .page-title {
   margin: 0;
   font-size: clamp(2rem, 3vw, 2.8rem);
+}
+
 .eyebrow {
   text-transform: uppercase;
   letter-spacing: 0.08em;
   font-weight: 700;
   color: #94a3b8;
   margin: 0 0 0.2rem 0;
-}
-
-.page-title {
-  margin: 0.1rem 0 0.3rem 0;
-  font-size: 2rem;
-  font-weight: 800;
-  color: white;
 }
 
 .page-lead {
