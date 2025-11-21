@@ -8,10 +8,10 @@ import AdminDashboard from './pages/AdminDashboard';
 import AuthPage from './pages/AuthPage';
 import { StoreProvider } from './context/StoreContext';
 
-// Wrapper to provide StoreContext to all routes
-const StoreWrapper = () => (
+// Wrapper to provide StoreContext to the entire layout
+const AppWrapper = () => (
   <StoreProvider>
-    <Outlet />
+    <MainLayout />
   </StoreProvider>
 );
 
@@ -19,37 +19,32 @@ export const router = createBrowserRouter(
   [
     {
       path: '/',
-      element: <MainLayout />,
+      element: <AppWrapper />, // MainLayout is now wrapped by StoreProvider
       children: [
         {
-          element: <StoreWrapper />, // Wrap children with StoreProvider
-          children: [
-            {
-              index: true,
-              element: <HomePage />,
-            },
-            {
-              path: 'fidelidad',
-              element: <FidelidadPage />,
-            },
-            {
-              path: 'gamer-store',
-              element: <GamerStoreFromJira />,
-            },
-            {
-              path: 'admin',
-              element: <AdminDashboard />,
-            },
-            {
-              path: 'auth',
-              element: <AuthPage />,
-            },
-            {
-              path: '*',
-              element: <NotFoundPage />,
-            },
-          ]
-        }
+          index: true,
+          element: <HomePage />,
+        },
+        {
+          path: 'fidelidad',
+          element: <FidelidadPage />,
+        },
+        {
+          path: 'gamer-store',
+          element: <GamerStoreFromJira />,
+        },
+        {
+          path: 'admin',
+          element: <AdminDashboard />,
+        },
+        {
+          path: 'auth',
+          element: <AuthPage />,
+        },
+        {
+          path: '*',
+          element: <NotFoundPage />,
+        },
       ],
     },
   ],
