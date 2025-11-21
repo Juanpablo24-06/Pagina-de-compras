@@ -29,6 +29,9 @@ function MainLayout() {
           <NavLink to="/fidelidad" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>
             Rewards
           </NavLink>
+          <NavLink to="/admin" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
+            Admin
+          </NavLink>
           <NavLink to="/auth" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>
             Cuenta
           </NavLink>
