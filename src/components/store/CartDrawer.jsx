@@ -1,56 +1,89 @@
 import { useStore } from '../../context/StoreContext';
 
 function CartDrawer({ isOpen, onClose, onCheckout }) {
-  const { cart, removeFromCart, updateCartQty, cartTotal, clearCart } = useStore();
+  const { cart, removeFromCart, updateCartQty, cartTotal } = useStore();
 
   if (!isOpen) return null;
 
+  // Simulation of taxes
+  const tax = cartTotal * 0.08;
+  const finalTotal = cartTotal + tax;
+
   return (
-    <div className="drawer-overlay">
-      <div className="drawer-panel">
+    <div className="modal-backdrop" style={{justifyContent: 'flex-end'}}>
+      <div className="drawer-container">
         <header className="drawer-header">
-          <h3>INVENTORY</h3>
-          <button className="close-btn" onClick={onClose}>✕</button>
+          <h3 style={{margin: 0}}>LOOT BOX</h3>
+          <button
+            onClick={onClose}
+            style={{background: 'none', border: 'none', color: '#fff', fontSize: '1.5rem'}}
+          >
+            ✕
+          </button>
         </header>
 
         <div className="drawer-content">
           {cart.length === 0 ? (
-            <div className="empty-state">
-              <span style={{ fontSize: '3rem' }}>🕸️</span>
-              <p>NO ITEMS DETECTED</p>
+            <div style={{textAlign: 'center', padding: '4rem 0', color: '#666'}}>
+              <div style={{fontSize: '3rem', marginBottom: '1rem'}}>🕸️</div>
+              <p>CONTAINER EMPTY</p>
+              <p style={{fontSize: '0.8rem'}}>ACQUIRE ASSETS TO PROCEED</p>
             </div>
           ) : (
-            <ul className="cart-list">
-              {cart.map((item) => (
-                <li key={item.id} className="cart-item">
-                  <div className="cart-thumb">{item.image}</div>
-                  <div className="cart-details">
-                    <h4>{item.name}</h4>
-                    <span className="item-price">${item.price}</span>
-                    <div className="qty-control">
-                        <button onClick={() => updateCartQty(item.id, item.qty - 1)}>-</button>
-                        <span>{item.qty}</span>
-                        <button onClick={() => updateCartQty(item.id, item.qty + 1)}>+</button>
+            <div>
+                {cart.map((item) => (
+                    <div key={item.id} className="cart-item-row">
+                        <div className="cart-item-img">
+                            {item.image}
+                        </div>
+                        <div className="cart-item-info">
+                            <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                                <h4 style={{fontSize: '0.95rem', margin: '0 0 0.3rem 0'}}>{item.name}</h4>
+                                <button
+                                    onClick={() => removeFromCart(item.id)}
+                                    style={{background: 'none', border: 'none', color: '#666', cursor: 'pointer'}}
+                                >
+                                    ✕
+                                </button>
+                            </div>
+                            <div style={{fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '0.5rem'}}>
+                                ${item.price} x {item.qty}
+                            </div>
+                            <div style={{display: 'flex', alignItems: 'center'}}>
+                                <button className="qty-btn" onClick={() => updateCartQty(item.id, item.qty - 1)}>-</button>
+                                <span className="qty-val">{item.qty}</span>
+                                <button className="qty-btn" onClick={() => updateCartQty(item.id, item.qty + 1)}>+</button>
+                            </div>
+                        </div>
                     </div>
-                  </div>
-                  <button className="remove-btn" onClick={() => removeFromCart(item.id)}>🗑️</button>
-                </li>
-              ))}
-            </ul>
+                ))}
+            </div>
           )}
         </div>
 
         <footer className="drawer-footer">
-          <div className="total-row">
-            <span>TOTAL CREDITS</span>
-            <span className="total-value">${cartTotal.toFixed(2)}</span>
+          <div style={{marginBottom: '1rem'}}>
+            <div style={{display: 'flex', justifyContent: 'space-between', color: '#aaa', fontSize: '0.9rem', marginBottom: '5px'}}>
+                <span>SUBTOTAL</span>
+                <span>${cartTotal.toFixed(2)}</span>
+            </div>
+            <div style={{display: 'flex', justifyContent: 'space-between', color: '#aaa', fontSize: '0.9rem', marginBottom: '1rem'}}>
+                <span>TAX (EST. 8%)</span>
+                <span>${tax.toFixed(2)}</span>
+            </div>
+            <div style={{display: 'flex', justifyContent: 'space-between', fontSize: '1.2rem', fontWeight: 'bold', color: 'var(--accent-primary)'}}>
+                <span>TOTAL</span>
+                <span>${finalTotal.toFixed(2)}</span>
+            </div>
           </div>
+
           <button
-            className="cyber-button full"
+            className="btn-primary"
+            style={{width: '100%'}}
             disabled={cart.length === 0}
             onClick={onCheckout}
           >
-            INITIATE CHECKOUT
+            INITIATE SECURE CHECKOUT
           </button>
         </footer>
       </div>
