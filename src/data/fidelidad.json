@@ -1,0 +1,64 @@
+{
+  "programa": "Fidelidad Compra Gamer",
+  "conversion": {
+    "montoBase": 1000,
+    "puntosPorMonto": 15,
+    "bonusPrimerCompra": 50,
+    "maximoPorCompra": 1200,
+    "nota": "Los puntos se redondean hacia abajo y se limitan por compra."
+  },
+  "mensajes": {
+    "exito": "Operación registrada con éxito",
+    "error": "Revisa los datos ingresados antes de continuar",
+    "limpieza": "Se limpió el formulario y el historial local"
+  },
+  "secciones": [
+    {
+      "id": "usuarios",
+      "titulo": "Usuarios y cuentas",
+      "reglas": [
+        "Requiere cuenta activa para acumular puntos",
+        "El perfil debe estar completo para sumar bonificaciones de bienvenida",
+        "Los cambios de contraseña no afectan el saldo"
+      ],
+      "dependencias": ["Catálogo de productos", "Carrito y compras"],
+      "referencias": ["UG1-12"],
+      "descripcion": "Agrupa registro, inicio de sesión, gestión del perfil y recuperación de contraseñas."
+    },
+    {
+      "id": "catalogo",
+      "titulo": "Catálogo de productos",
+      "reglas": [
+        "Los puntos promocionales dependen de la categoría del producto",
+        "Los filtros y búsquedas deben conservar el carrito actual"
+      ],
+      "dependencias": ["Usuarios y cuentas"],
+      "referencias": ["UG1-13"],
+      "descripcion": "Permite explorar productos gamer, ver detalles y filtrar por categoría, marca o precio."
+    },
+    {
+      "id": "carrito",
+      "titulo": "Carrito y compras",
+      "reglas": [
+        "Cada ítem con descuento informa puntos base y puntos extra",
+        "El total de puntos se calcula antes de impuestos",
+        "Vaciar el carrito descuenta puntos pendientes"
+      ],
+      "dependencias": ["Catálogo de productos", "Pagos y pedidos"],
+      "referencias": ["UG1-14"],
+      "descripcion": "Gestiona agregar o quitar productos, ver el total y proceder a la compra."
+    },
+    {
+      "id": "pagos",
+      "titulo": "Pagos y pedidos",
+      "reglas": [
+        "Los métodos de pago definen multiplicadores de puntos",
+        "Los pedidos confirmados guardan un comprobante de puntos",
+        "Las devoluciones generan notas de débito de puntos"
+      ],
+      "dependencias": ["Carrito y compras"],
+      "referencias": ["UG1-15"],
+      "descripcion": "Procesa el pago, confirma pedidos y consulta el historial de compras."
+    }
+  ]
+}
